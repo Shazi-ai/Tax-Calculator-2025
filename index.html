@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eeeeff',
+                            100: '#e0e0ff',
+                            200: '#c0c0ff',
+                            300: '#9e9df1',
+                            400: '#7e7ce7',
+                            500: '#5D5CDE',
+                            600: '#4a49b7',
+                            700: '#393891',
+                            800: '#29286b',
+                            900: '#1a1944',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-in': 'slideIn 0.5s ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-calculator text-primary-500 text-2xl mr-2"></i>
+                        <span class="font-bold text-xl">Tax Calculator 2025</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="dark-mode-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                    <nav class="hidden md:flex space-x-8">
+                        <a href="#home" class="nav-link text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-medium">Home</a>
+                        <a href="#calculator" class="nav-link text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 font-medium">Calculator</a>
+                        <a href="#about" class="nav-link text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 font-medium">About</a>
+                        <a href="#faq" class="nav-link text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 font-medium">FAQ</a>
+                    </nav>
+                    <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 shadow-md pb-3">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#home" class="mobile-nav-link block px-3 py-2 rounded-md font-medium text-primary-500 bg-gray-100 dark:bg-gray-700">Home</a>
+                <a href="#calculator" class="mobile-nav-link block px-3 py-2 rounded-md font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary-500">Calculator</a>
+                <a href="#about" class="mobile-nav-link block px-3 py-2 rounded-md font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary-500">About</a>
+                <a href="#faq" class="mobile-nav-link block px-3 py-2 rounded-md font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary-500">FAQ</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <!-- Home Page -->
+        <div id="home-page" class="page active">
+            <div class="relative bg-primary-500 dark:bg-primary-700">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+                    <div class="md:w-2/3">
+                        <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+                            Plan Your Taxes for 2025
+                        </h1>
+                        <p class="mt-6 text-xl text-white opacity-90">
+                            Estimate your federal income tax burden with our accurate, up-to-date calculator built for the 2025 tax year.
+                        </p>
+                        <div class="mt-10">
+                            <a href="#calculator" class="get-started-btn inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white">
+                                Get Started
+                                <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute right-0 top-0 hidden lg:block h-full w-1/3">
+                    <svg class="h-full w-full text-white" fill="currentColor" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <polygon points="0,0 100,0 50,100 0,100"></polygon>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="py-12 bg-white dark:bg-gray-800">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center">
+                        <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                            Why Use Our Tax Calculator?
+                        </h2>
+                    </div>
+
+                    <div class="mt-10">
+                        <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+                            <div class="bg-gray-50 dark:bg-gray-700 overflow-hidden shadow rounded-lg p-6 hover:shadow-md transition-shadow">
+                                <div class="flex justify-center items-center h-12 w-12 rounded-md bg-primary-500 text-white mx-auto">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="mt-5 text-center">
+                                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Accurate 2025 Projections</h3>
+                                    <p class="mt-2 text-base text-gray-600 dark:text-gray-300">
+                                        Based on the latest tax law projections and inflation adjustments for 2025.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 dark:bg-gray-700 overflow-hidden shadow rounded-lg p-6 hover:shadow-md transition-shadow">
+                                <div class="flex justify-center items-center h-12 w-12 rounded-md bg-primary-500 text-white mx-auto">
+                                    <i class="fas fa-sliders-h"></i>
+                                </div>
+                                <div class="mt-5 text-center">
+                                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Customizable Options</h3>
+                                    <p class="mt-2 text-base text-gray-600 dark:text-gray-300">
+                                        Account for different filing statuses, deductions, and credits to get a personalized estimate.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 dark:bg-gray-700 overflow-hidden shadow rounded-lg p-6 hover:shadow-md transition-shadow">
+                                <div class="flex justify-center items-center h-12 w-12 rounded-md bg-primary-500 text-white mx-auto">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <div class="mt-5 text-center">
+                                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">100% Private</h3>
+                                    <p class="mt-2 text-base text-gray-600 dark:text-gray-300">
+                                        All calculations are performed locally in your browser. Your financial data never leaves your device.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-12 text-center">
+                        <a href="#calculator" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            Start Calculating
+                            <i class="fas fa-calculator ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculator Page -->
+        <div id="calculator-page" class="page">
+            <div class="py-6 sm:py-12 bg-gray-50 dark:bg-gray-900">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                            2025 Tax Calculator
+                        </h2>
+                        <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-600 dark:text-gray-400">
+                            Enter your details to estimate your 2025 federal income tax
+                        </p>
+                    </div>
+
+                    <div class="mt-4 bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+                        <div class="px-4 py-5 sm:p-6">
+                            <form id="tax-form" class="space-y-8 divide-y divide-gray-200 dark:divide-gray-700">
+                                <div class="space-y-6">
+                                    <div>
+                                        <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+                                            Filing Information
+                                        </h3>
+                                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                            Select your filing status and tax year information.
+                                        </p>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-12">
+                                        <div class="sm:col-span-6">
+                                            <label for="filing-status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                Filing Status
+                                            </label>
+                                            <select id="filing-status" name="filing-status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                                <option value="single">Single</option>
+                                                <option value="married_joint">Married Filing Jointly</option>
+                                                <option value="married_separate">Married Filing Separately</option>
+                                                <option value="head_household">Head of Household</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="sm:col-span-6">
+                                            <label for="tax-year" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                Tax Year
+                                            </label>
+                                            <div class="mt-1">
+                                                <input type="text" name="tax-year" id="tax-year" value="2025" disabled class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pt-6 space-y-6">
+                                    <div>
+                                        <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+                                            Income
+                                        </h3>
+                                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                            Enter your income information for the 2025 tax year.
+                                        </p>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                                        <div class="sm:col-span-3">
+                                            <label for="wages" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                Wages, Salaries, Tips
+                                            </label>
+                                            <div class="mt-1 relative rounded-md shadow-sm">
+                                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+                                                </div>
+                                                <input type="number" name="wages" id="wages" min="0" step="100" value="75000" class="focus:ring-primary-500 focus:border-primary-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+                                            </div>
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="interest" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                Taxable Interest
+                                            </label>
+                                            <div class="mt-1 relative rounded-md shadow-sm">
+                                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+                                                </div>
+                                                <input type="number" name="interest" id="interest" min="0" step="100" value="1000" class="focus:ring-primary-500 focus:border-primary-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+                                            </div>
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="dividends" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                Qualified Dividends
+                                            </label>
+                                            <div class="mt-1 relative rounded-md shadow-sm">
+                                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+                                                </div>
+                                                <input type="number" name="dividends" id="dividends" min="0" step="100" value="500" class="focus:ring-primary-500 focus:border-primary-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+                                            </div>
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="capital-gains" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                Capital Gains/Losses
+                                            </label>
+                                            <div class="mt-1 relative rounded-md shadow-sm">
+                                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+                                                </div>
+                                                <input type="number" name="capital-gains" id="capital-gains" step="100" value="2000" class="focus:ring-primary-500 focus:border-primary-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pt-6 space-y-6">
+                                    <div>
+                                        <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+                                            Deductions & Credits
+                                        </h3>
+                                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                            Choose between standard or itemized deductions and specify any tax credits.
+                                        </p>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <div class="relative flex items-start">
+                                            <div class="flex items-center h-5">
+                                                <input id="standard-deduction" name="deduction-type" type="radio" checked class="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700">
+                                            </div>
+                                            <div class="ml-3 text-sm">
+                                                <label for="standard-deduction" class="font-medium text-gray-700 dark:text-gray-300">Standard Deduction</label>
+                                                <p class="text-gray-500 dark:text-gray-400" id="standard-deduction-amount">$14,600 (Single)</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="relative flex items-start">
+                                            <div class="flex items-center h-5">
+                                                <input id="itemized-deduction" name="deduction-type" type="radio" class="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700">
+                                            </div>
+                                            <div class="ml-3 text-sm">
+                                                <label for="itemized-deduction" class="font-medium text-gray-700 dark:text-gray-300">Itemized Deduction</label>
+                                            </div>
+                                        </div>
+
+                                        <div id="itemized-deduction-fields" class="pl-7 space-y-3 hidden">
+                                            <div class="grid grid-cols-1 gap-y-3 gap-x-4 sm:grid-cols-6">
+                                                <div class="sm:col-span-3">
+                                                    <label for="medical-expenses" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                        Medical Expenses
+                                                    </label>
+                                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                            <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+                                                        </div>
+                                                        <input type="number" name="medical-expenses" id="medical-expenses" min="0" step="100" value="0" class="focus:ring-primary-500 focus:border-primary-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+                                                    </div>
+                                                </div>
+
+                                                <div class="sm:col-span-3">
+                                                    <label for="state-taxes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                        State & Local Taxes
+                                                    </label>
+                                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                            <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+                                                        </div>
+                                                        <input type="number" name="state-taxes" id="state-taxes" min="0" step="100" value="0" class="focus:ring-primary-500 focus:border-primary-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+                                                    </div>
+                                                </div>
+
+                                                <div class="sm:col-span-3">
+                                                    <label for="mortgage-interest" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                        Mortgage Interest
+                                                    </label>
+                                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                            <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+                                                        </div>
+                                                        <input type="number" name="mortgage-interest" id="mortgage-interest" min="0" step="100" value="0" class="focus:ring-primary-500 focus:border-primary-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+                                                    </div>
+                                                </div>
+
+                                                <div class="sm:col-span-3">
+                                                    <label for="charitable" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                        Charitable Contributions
+                                                    </label>
+                                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                            <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+                                                        </div>
+                                                        <input type="number" name="charitable" id="charitable" min="0" step="100" value="0" class="focus:ring-primary-500 focus:border-primary-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+                                                    </div>
+                                                </div>
+
+                                                <div class="sm:col-span-6">
+                                                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                        Total Itemized Deductions: <span id="total-itemized" class="font-bold">$0</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                                        <div class="sm:col-span-3">
+                                            <label for="child-tax-credit" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                Number of Qualifying Children
+                                            </label>
+                                            <div class="mt-1">
+                                                <input type="number" name="child-tax-credit" id="child-tax-credit" min="0" max="10" value="0" class="focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+                                            </div>
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="other-credits" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                Other Tax Credits
+                                            </label>
+                                            <div class="mt-1 relative rounded-md shadow-sm">
+                                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+                                                </div>
+                                                <input type="number" name="other-credits" id="other-credits" min="0" step="100" value="0" class="focus:ring-primary-500 focus:border-primary-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pt-5">
+                                    <div class="flex justify-end">
+                                        <button type="reset" class="ml-3 bg-white dark:bg-gray-700 py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                            Reset
+                                        </button>
+                                        <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                            Calculate
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Page -->
+        <div id="results-page" class="page">
+            <div class="py-6 sm:py-12 bg-gray-50 dark:bg-gray-900">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                            Your 2025 Tax Estimate
+                        </h2>
+                        <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-600 dark:text-gray-400">
+                            Based on the information you provided
+                        </p>
+                    </div>
+
+                    <div class="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
+                        <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+                                    Summary
+                                </h3>
+                                
+                                <div class="mt-6 border-t border-gray-200 dark:border-gray-700">
+                                    <dl class="divide-y divide-gray-200 dark:divide-gray-700">
+                                        <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Filing Status</dt>
+                                            <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2" id="summary-filing-status">Single</dd>
+                                        </div>
+                                        <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Income</dt>
+                                            <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2" id="summary-total-income">$78,500.00</dd>
+                                        </div>
+                                        <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Adjustments/Deductions</dt>
+                                            <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2" id="summary-deductions">$14,600.00</dd>
+                                        </div>
+                                        <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Taxable Income</dt>
+                                            <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2" id="summary-taxable-income">$63,900.00</dd>
+                                        </div>
+                                        <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Credits</dt>
+                                            <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2" id="summary-credits">$0.00</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+
+                                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="flex items-center justify-between">
+                                        <h4 class="text-xl font-bold text-gray-900 dark:text-white">Estimated 2025 Tax</h4>
+                                        <span class="text-2xl font-bold text-primary-600 dark:text-primary-400" id="summary-tax-owed">$10,289.00</span>
+                                    </div>
+                                    <div class="mt-2 flex items-center justify-between">
+                                        <h4 class="text-md font-medium text-gray-700 dark:text-gray-300">Effective Tax Rate</h4>
+                                        <span class="text-lg font-medium text-gray-700 dark:text-gray-300" id="summary-effective-rate">13.1%</span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-8">
+                                    <button id="recalculate-button" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                        Recalculate
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+                                    Tax Breakdown
+                                </h3>
+                                
+                                <div class="mt-4">
+                                    <div class="chart-container">
+                                        <canvas id="tax-breakdown-chart"></canvas>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6 border-t border-gray-200 dark:border-gray-700">
+                                    <h4 class="text-md font-medium text-gray-700 dark:text-gray-300 py-4">Tax Brackets</h4>
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700" id="tax-bracket-table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="px-3 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Bracket</th>
+                                                    <th class="px-3 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rate</th>
+                                                    <th class="px-3 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Income in Bracket</th>
+                                                    <th class="px-3 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tax in Bracket</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="tax-bracket-body">
+                                                <!-- Bracket rows will be populated by JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Page -->
+        <div id="about-page" class="page">
+            <div class="py-12 bg-gray-50 dark:bg-gray-900">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center">
+                        <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                            About Our Tax Calculator
+                        </h2>
+                        <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-600 dark:text-gray-400">
+                            Understanding how we calculate your taxes
+                        </p>
+                    </div>
+
+                    <div class="mt-10 bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+                        <div class="px-4 py-5 sm:p-6">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                                Tax Calculation Methodology
+                            </h3>
+                            <div class="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-400">
+                                <p>
+                                    Our 2025 tax calculator provides an estimate of your federal income tax based on projected tax brackets, deduction amounts, and credits for the 2025 tax year.
+                                </p>
+                            </div>
+                            
+                            <div class="mt-5 border-t border-gray-200 dark:border-gray-700 pt-5">
+                                <h4 class="text-md font-medium text-gray-900 dark:text-white">How We Calculate Your Taxes</h4>
+                                <ol class="mt-3 list-decimal list-inside text-sm text-gray-500 dark:text-gray-400 space-y-2">
+                                    <li>We start by adding up all your income sources (wages, dividends, interest, capital gains).</li>
+                                    <li>Next, we subtract your deductions (either standard or itemized).</li>
+                                    <li>The result is your taxable income, which is taxed progressively based on income brackets.</li>
+                                    <li>We then apply any tax credits to reduce your total tax liability.</li>
+                                </ol>
+                            </div>
+                            
+                            <div class="mt-5 border-t border-gray-200 dark:border-gray-700 pt-5">
+                                <h4 class="text-md font-medium text-gray-900 dark:text-white">2025 Tax Brackets</h4>
+                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                    The calculator uses projected 2025 federal income tax brackets, adjusted for inflation. The brackets used are estimates and may change if tax laws are modified.
+                                </p>
+                                
+                                <div class="mt-4 overflow-x-auto">
+                                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                        <thead>
+                                            <tr>
+                                                <th class="px-3 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tax Rate</th>
+                                                <th class="px-3 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Single</th>
+                                                <th class="px-3 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Married Filing Jointly</th>
+                                                <th class="px-3 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Married Filing Separately</th>
+                                                <th class="px-3 py-3 bg-gray-50 dark:bg-gray-700 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Head of Household</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                            <tr>
+                                                <td class="px-3 py-2 text-sm text-gray-900 dark:text-white">10%</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$0 - $11,600</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$0 - $23,200</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$0 - $11,600</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$0 - $16,550</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-2 text-sm text-gray-900 dark:text-white">12%</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$11,601 - $47,150</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$23,201 - $94,300</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$11,601 - $47,150</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$16,551 - $63,100</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-2 text-sm text-gray-900 dark:text-white">22%</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$47,151 - $100,525</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$94,301 - $201,050</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$47,151 - $100,525</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$63,101 - $100,500</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-2 text-sm text-gray-900 dark:text-white">24%</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$100,526 - $191,950</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$201,051 - $383,900</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$100,526 - $191,950</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$100,501 - $191,950</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-2 text-sm text-gray-900 dark:text-white">32%</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$191,951 - $243,725</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$383,901 - $487,450</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$191,951 - $243,725</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$191,951 - $243,700</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-2 text-sm text-gray-900 dark:text-white">35%</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$243,726 - $609,350</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$487,451 - $731,200</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$243,726 - $365,600</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">$243,701 - $609,350</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-2 text-sm text-gray-900 dark:text-white">37%</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">Over $609,350</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">Over $731,200</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">Over $365,600</td>
+                                                <td class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">Over $609,350</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5 border-t border-gray-200 dark:border-gray-700 pt-5">
+                                <h4 class="text-md font-medium text-gray-900 dark:text-white">Disclaimer</h4>
+                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                    This calculator provides estimates only and should not be used for tax preparation or filing purposes. Tax laws, brackets, and regulations may change before or during the 2025 tax year. Please consult with a tax professional for personalized tax advice.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Page -->
+        <div id="faq-page" class="page">
+            <div class="py-12 bg-gray-50 dark:bg-gray-900">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center">
+                        <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                            Frequently Asked Questions
+                        </h2>
+                        <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-600 dark:text-gray-400">
+                            Get answers to common questions about taxes and our calculator
+                        </p>
+                    </div>
+
+                    <div class="mt-12">
+                        <dl class="space-y-6 divide-y divide-gray-200 dark:divide-gray-700">
+                            <div class="pt-6">
+                                <dt class="text-lg">
+                                    <button type="button" class="faq-question text-left w-full flex justify-between items-start text-gray-800 dark:text-white" aria-controls="faq-1" aria-expanded="true">
+                                        <span class="font-medium">How accurate is this tax calculator?</span>
+                                        <span class="ml-6 h-7 flex items-center">
+                                            <i class="fas fa-chevron-down h-6 w-6 transform rotate-180 transition-transform duration-200"></i>
+                                        </span>
+                                    </button>
+                                </dt>
+                                <dd class="mt-2 pr-12" id="faq-1">
+                                    <p class="text-base text-gray-600 dark:text-gray-400">
+                                        Our calculator provides an estimate based on projected 2025 tax brackets, standard deductions, and basic tax credits. While we strive for accuracy, tax laws may change between now and 2025. Additionally, your specific tax situation may involve complexities that aren't captured by our calculator. For proper tax planning, consult with a qualified tax professional.
+                                    </p>
+                                </dd>
+                            </div>
+
+                            <div class="pt-6">
+                                <dt class="text-lg">
+                                    <button type="button" class="faq-question text-left w-full flex justify-between items-start text-gray-800 dark:text-white" aria-controls="faq-2" aria-expanded="false">
+                                        <span class="font-medium">What tax brackets are used for 2025?</span>
+                                        <span class="ml-6 h-7 flex items-center">
+                                            <i class="fas fa-chevron-down h-6 w-6 transition-transform duration-200"></i>
+                                        </span>
+                                    </button>
+                                </dt>
+                                <dd class="mt-2 pr-12 hidden" id="faq-2">
+                                    <p class="text-base text-gray-600 dark:text-gray-400">
+                                        Our calculator uses projected 2025 tax brackets based on current tax laws with inflation adjustments. These include the 10%, 12%, 22%, 24%, 32%, 35%, and 37% brackets. The income ranges for each bracket are adjusted annually for inflation. Please note that tax laws could change before 2025.
+                                    </p>
+                                </dd>
+                            </div>
+
+                            <div class="pt-6">
+                                <dt class="text-lg">
+                                    <button type="button" class="faq-question text-left w-full flex justify-between items-start text-gray-800 dark:text-white" aria-controls="faq-3" aria-expanded="false">
+                                        <span class="font-medium">Does this calculator include state taxes?</span>
+                                        <span class="ml-6 h-7 flex items-center">
+                                            <i class="fas fa-chevron-down h-6 w-6 transition-transform duration-200"></i>
+                                        </span>
+                                    </button>
+                                </dt>
+                                <dd class="mt-2 pr-12 hidden" id="faq-3">
+                                    <p class="text-base text-gray-600 dark:text-gray-400">
+                                        No, this calculator only estimates federal income taxes. State taxes vary significantly based on your state of residence, with some states having no income tax at all while others have graduated tax brackets similar to federal taxes. To get a complete picture of your tax situation, you should also consider applicable state and local taxes.
+                                    </p>
+                                </dd>
+                            </div>
+
+                            <div class="pt-6">
+                                <dt class="text-lg">
+                                    <button type="button" class="faq-question text-left w-full flex justify-between items-start text-gray-800 dark:text-white" aria-controls="faq-4" aria-expanded="false">
+                                        <span class="font-medium">What deductions are included in the calculator?</span>
+                                        <span class="ml-6 h-7 flex items-center">
+                                            <i class="fas fa-chevron-down h-6 w-6 transition-transform duration-200"></i>
+                                        </span>
+                                    </button>
+                                </dt>
+                                <dd class="mt-2 pr-12 hidden" id="faq-4">
+                                    <p class="text-base text-gray-600 dark:text-gray-400">
+                                        The calculator includes the standard deduction for different filing statuses, projected for 2025. For itemized deductions, we include the major categories: medical expenses, state and local taxes (SALT), mortgage interest, and charitable contributions. Note that the SALT deduction is currently capped at $10,000, but this could change by 2025.
+                                    </p>
+                                </dd>
+                            </div>
+
+                            <div class="pt-6">
+                                <dt class="text-lg">
+                                    <button type="button" class="faq-question text-left w-full flex justify-between items-start text-gray-800 dark:text-white" aria-controls="faq-5" aria-expanded="false">
+                                        <span class="font-medium">How does the calculator handle capital gains?</span>
+                                        <span class="ml-6 h-7 flex items-center">
+                                            <i class="fas fa-chevron-down h-6 w-6 transition-transform duration-200"></i>
+                                        </span>
+                                    </button>
+                                </dt>
+                                <dd class="mt-2 pr-12 hidden" id="faq-5">
+                                    <p class="text-base text-gray-600 dark:text-gray-400">
+                                        For simplicity, our basic calculator treats capital gains as ordinary income. In reality, long-term capital gains (assets held more than a year) are taxed at preferential rates of 0%, 15%, or 20% depending on your income level. Short-term capital gains are taxed as ordinary income. For a more detailed calculation of capital gains taxes, please consult a tax professional.
+                                    </p>
+                                </dd>
+                            </div>
+
+                            <div class="pt-6">
+                                <dt class="text-lg">
+                                    <button type="button" class="faq-question text-left w-full flex justify-between items-start text-gray-800 dark:text-white" aria-controls="faq-6" aria-expanded="false">
+                                        <span class="font-medium">What tax credits are included in the calculation?</span>
+                                        <span class="ml-6 h-7 flex items-center">
+                                            <i class="fas fa-chevron-down h-6 w-6 transition-transform duration-200"></i>
+                                        </span>
+                                    </button>
+                                </dt>
+                                <dd class="mt-2 pr-12 hidden" id="faq-6">
+                                    <p class="text-base text-gray-600 dark:text-gray-400">
+                                        Our calculator includes an estimate for the Child Tax Credit, which is currently $2,000 per qualifying child. We also allow you to input other tax credits you may be eligible for, such as the Earned Income Tax Credit, American Opportunity Credit, Lifetime Learning Credit, and Retirement Savings Contribution Credit. Tax credits directly reduce your tax liability and can significantly lower your final tax bill.
+                                    </p>
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 md:flex md:items-center md:justify-between">
+                <div class="flex space-x-6 md:order-2">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        <button id="privacy-toggle" class="hover:text-gray-700 dark:hover:text-gray-300">Privacy Policy</button>
+                    </p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        <button id="terms-toggle" class="hover:text-gray-700 dark:hover:text-gray-300">Terms of Service</button>
+                    </p>
+                </div>
+                <p class="mt-8 text-sm text-gray-500 dark:text-gray-400 md:mt-0 md:order-1">
+                    &copy; 2023 USA Tax Calculator. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacy-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 z-50 hidden flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-xl max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Privacy Policy</h3>
+                <button id="privacy-close" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                <p class="mb-4">Last updated: January 2023</p>
+                
+                <h4 class="text-md font-medium text-gray-800 dark:text-white mb-2">1. Introduction</h4>
+                <p class="mb-4">
+                    This Privacy Policy explains how USA Tax Calculator ("we," "us," or "our") collects, uses, and protects information when you use our tax calculator web application. We are committed to ensuring the privacy and security of your data.
+                </p>
+                
+                <h4 class="text-md font-medium text-gray-800 dark:text-white mb-2">2. Information We Collect</h4>
+                <p class="mb-4">
+                    Our tax calculator operates entirely in your browser. We do not collect, store, or transmit any of the financial information you enter. All calculations are performed locally on your device, and your data is not sent to our servers or any third parties.
+                </p>
+                
+                <h4 class="text-md font-medium text-gray-800 dark:text-white mb-2">3. Browser Storage</h4>
+                <p class="mb-4">
+                    We may use browser local storage mechanisms to save your preferences (such as dark mode settings) to improve your user experience. This information remains on your device and is not accessible to us.
+                </p>
+                
+                <h4 class="text-md font-medium text-gray-800 dark:text-white mb-2">4. Changes to This Privacy Policy</h4>
+                <p class="mb-4">
+                    We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date.
+                </p>
+                
+                <h4 class="text-md font-medium text-gray-800 dark:text-white mb-2">5. Contact Us</h4>
+                <p>
+                    If you have any questions about this Privacy Policy, please contact us at privacy@taxcalculator-example.com.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div id="terms-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 z-50 hidden flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-xl max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Terms of Service</h3>
+                <button id="terms-close" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                <p class="mb-4">Last updated: January 2023</p>
+                
+                <h4 class="text-md font-medium text-gray-800 dark:text-white mb-2">1. Acceptance of Terms</h4>
+                <p class="mb-4">
+                    By using the USA Tax Calculator web application, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use this application.
+                </p>
+                
+                <h4 class="text-md font-medium text-gray-800 dark:text-white mb-2">2. Disclaimer</h4>
+                <p class="mb-4">
+                    Our tax calculator is provided for informational and estimation purposes only. The calculations are based on projected tax laws and rates for the 2025 tax year, which may change. We make no guarantees about the accuracy, completeness, or reliability of the results.
+                </p>
+                
+                <h4 class="text-md font-medium text-gray-800 dark:text-white mb-2">3. Not Tax Advice</h4>
+                <p class="mb-4">
+                    The information provided by this calculator should not be considered as tax, legal, or financial advice. You should consult with a qualified tax professional for personalized advice regarding your specific situation.
+                </p>
+                
+                <h4 class="text-md font-medium text-gray-800 dark:text-white mb-2">4. Limitation of Liability</h4>
+                <p class="mb-4">
+                    We shall not be liable for any direct, indirect, incidental, consequential, or special damages arising out of or in any way connected with the use of this calculator, regardless of whether such damages are based on contract, tort, strict liability, or other theories of liability.
+                </p>
+                
+                <h4 class="text-md font-medium text-gray-800 dark:text-white mb-2">5. Changes to Terms</h4>
+                <p class="mb-4">
+                    We reserve the right to modify these Terms of Service at any time. Changes will be effective immediately upon posting on this page with an updated "Last updated" date.
+                </p>
+                
+                <h4 class="text-md font-medium text-gray-800 dark:text-white mb-2">6. Contact Us</h4>
+                <p>
+                    If you have any questions about these Terms of Service, please contact us at terms@taxcalculator-example.com.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tax Bracket Data for 2025 (Projected)
+        const taxBrackets = {
+            single: [
+                { rate: 0.10, min: 0, max: 11600 },
+                { rate: 0.12, min: 11601, max: 47150 },
+                { rate: 0.22, min: 47151, max: 100525 },
+                { rate: 0.24, min: 100526, max: 191950 },
+                { rate: 0.32, min: 191951, max: 243725 },
+                { rate: 0.35, min: 243726, max: 609350 },
+                { rate: 0.37, min: 609351, max: Infinity }
+            ],
+            married_joint: [
+                { rate: 0.10, min: 0, max: 23200 },
+                { rate: 0.12, min: 23201, max: 94300 },
+                { rate: 0.22, min: 94301, max: 201050 },
+                { rate: 0.24, min: 201051, max: 383900 },
+                { rate: 0.32, min: 383901, max: 487450 },
+                { rate: 0.35, min: 487451, max: 731200 },
+                { rate: 0.37, min: 731201, max: Infinity }
+            ],
+            married_separate: [
+                { rate: 0.10, min: 0, max: 11600 },
+                { rate: 0.12, min: 11601, max: 47150 },
+                { rate: 0.22, min: 47151, max: 100525 },
+                { rate: 0.24, min: 100526, max: 191950 },
+                { rate: 0.32, min: 191951, max: 243725 },
+                { rate: 0.35, min: 243726, max: 365600 },
+                { rate: 0.37, min: 365601, max: Infinity }
+            ],
+            head_household: [
+                { rate: 0.10, min: 0, max: 16550 },
+                { rate: 0.12, min: 16551, max: 63100 },
+                { rate: 0.22, min: 63101, max: 100500 },
+                { rate: 0.24, min: 100501, max: 191950 },
+                { rate: 0.32, min: 191951, max: 243700 },
+                { rate: 0.35, min: 243701, max: 609350 },
+                { rate: 0.37, min: 609351, max: Infinity }
+            ]
+        };
+
+        // Standard deduction amounts for 2025 (Projected)
+        const standardDeductions = {
+            single: 14600,
+            married_joint: 29200,
+            married_separate: 14600,
+            head_household: 21900
+        };
+
+        // Child tax credit amount for 2025 (Projected)
+        const childTaxCredit = 2000;
+
+        // DOM Elements
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const getStartedBtn = document.querySelector('.get-started-btn');
+        const standardDeductionRadio = document.getElementById('standard-deduction');
+        const itemizedDeductionRadio = document.getElementById('itemized-deduction');
+        const itemizedDeductionFields = document.getElementById('itemized-deduction-fields');
+        const standardDeductionAmount = document.getElementById('standard-deduction-amount');
+        const filingStatusSelect = document.getElementById('filing-status');
+        const recalculateButton = document.getElementById('recalculate-button');
+        const taxForm = document.getElementById('tax-form');
+        const privacyToggle = document.getElementById('privacy-toggle');
+        const privacyModal = document.getElementById('privacy-modal');
+        const privacyClose = document.getElementById('privacy-close');
+        const termsToggle = document.getElementById('terms-toggle');
+        const termsModal = document.getElementById('terms-modal');
+        const termsClose = document.getElementById('terms-close');
+        const faqQuestions = document.querySelectorAll('.faq-question');
+
+        // Charts
+        let taxBreakdownChart = null;
+
+        // Initialize Page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up dark mode based on user preference
+            initDarkMode();
+            
+            // Set up navigation
+            setupNavigation();
+
+            // Set up form interactions
+            setupFormInteractions();
+
+            // Setup modals
+            setupModals();
+
+            // Setup FAQ
+            setupFAQ();
+        });
+
+        // Dark Mode Setup
+        function initDarkMode() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+            }
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                if (event.matches) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+                updateCharts();
+            });
+
+            darkModeToggle.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                updateCharts();
+            });
+        }
+
+        // Navigation Setup
+        function setupNavigation() {
+            // Handle navigation clicks
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('href').substring(1);
+                    navigateToPage(target);
+                    
+                    // Close mobile menu when a link is clicked
+                    if (mobileMenu.classList.contains('block')) {
+                        mobileMenu.classList.replace('block', 'hidden');
+                    }
+                    
+                    // Update active nav link
+                    navLinks.forEach(navLink => {
+                        if (navLink.getAttribute('href') === '#' + target) {
+                            navLink.classList.add('text-primary-500');
+                            navLink.classList.remove('text-gray-700', 'dark:text-gray-300');
+                        } else {
+                            navLink.classList.remove('text-primary-500');
+                            navLink.classList.add('text-gray-700', 'dark:text-gray-300');
+                        }
+                    });
+                });
+            });
+
+            // Mobile menu toggle
+            mobileMenuButton.addEventListener('click', function() {
+                if (mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.replace('hidden', 'block');
+                } else {
+                    mobileMenu.classList.replace('block', 'hidden');
+                }
+            });
+
+            // Get Started button
+            getStartedBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToPage('calculator');
+                
+                // Update active nav link
+                navLinks.forEach(navLink => {
+                    if (navLink.getAttribute('href') === '#calculator') {
+                        navLink.classList.add('text-primary-500');
+                        navLink.classList.remove('text-gray-700', 'dark:text-gray-300');
+                    } else {
+                        navLink.classList.remove('text-primary-500');
+                        navLink.classList.add('text-gray-700', 'dark:text-gray-300');
+                    }
+                });
+            });
+
+            // Recalculate button
+            recalculateButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToPage('calculator');
+            });
+        }
+
+        // Navigate to page
+        function navigateToPage(pageId) {
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId + '-page').classList.add('active');
+        }
+
+        // Setup form interactions
+        function setupFormInteractions() {
+            // Standard vs Itemized Deduction toggle
+            standardDeductionRadio.addEventListener('change', toggleDeductionFields);
+            itemizedDeductionRadio.addEventListener('change', toggleDeductionFields);
+
+            // Update standard deduction amount based on filing status
+            filingStatusSelect.addEventListener('change', updateStandardDeduction);
+            updateStandardDeduction();
+
+            // Calculate itemized deduction total
+            const itemizedInputs = document.querySelectorAll('#itemized-deduction-fields input[type=number]');
+            itemizedInputs.forEach(input => {
+                input.addEventListener('input', calculateItemizedTotal);
+            });
+
+            // Form submission
+            taxForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculateTax();
+            });
+        }
+
+        // Toggle between standard and itemized deduction fields
+        function toggleDeductionFields() {
+            if (itemizedDeductionRadio.checked) {
+                itemizedDeductionFields.classList.remove('hidden');
+                calculateItemizedTotal();
+            } else {
+                itemizedDeductionFields.classList.add('hidden');
+            }
+        }
+
+        // Update standard deduction amount based on filing status
+        function updateStandardDeduction() {
+            const filingStatus = filingStatusSelect.value;
+            const deductionAmount = standardDeductions[filingStatus];
+            let statusText = '';
+            
+            switch(filingStatus) {
+                case 'single':
+                    statusText = 'Single';
+                    break;
+                case 'married_joint':
+                    statusText = 'Married Filing Jointly';
+                    break;
+                case 'married_separate':
+                    statusText = 'Married Filing Separately';
+                    break;
+                case 'head_household':
+                    statusText = 'Head of Household';
+                    break;
+            }
+            
+            standardDeductionAmount.textContent = `$${deductionAmount.toLocaleString()} (${statusText})`;
+        }
+
+        // Calculate itemized deduction total
+        function calculateItemizedTotal() {
+            const medicalExpenses = parseFloat(document.getElementById('medical-expenses').value) || 0;
+            const stateTaxes = parseFloat(document.getElementById('state-taxes').value) || 0;
+            const mortgageInterest = parseFloat(document.getElementById('mortgage-interest').value) || 0;
+            const charitable = parseFloat(document.getElementById('charitable').value) || 0;
+            
+            const total = medicalExpenses + Math.min(stateTaxes, 10000) + mortgageInterest + charitable;
+            document.getElementById('total-itemized').textContent = `$${total.toLocaleString()}`;
+        }
+
+        // Calculate tax
+        function calculateTax() {
+            // Get form values
+            const filingStatus = filingStatusSelect.value;
+            const wages = parseFloat(document.getElementById('wages').value) || 0;
+            const interest = parseFloat(document.getElementById('interest').value) || 0;
+            const dividends = parseFloat(document.getElementById('dividends').value) || 0;
+            const capitalGains = parseFloat(document.getElementById('capital-gains').value) || 0;
+            
+            const useStandardDeduction = standardDeductionRadio.checked;
+            let deductionAmount = 0;
+            
+            if (useStandardDeduction) {
+                deductionAmount = standardDeductions[filingStatus];
+            } else {
+                const medicalExpenses = parseFloat(document.getElementById('medical-expenses').value) || 0;
+                const stateTaxes = parseFloat(document.getElementById('state-taxes').value) || 0;
+                const mortgageInterest = parseFloat(document.getElementById('mortgage-interest').value) || 0;
+                const charitable = parseFloat(document.getElementById('charitable').value) || 0;
+                
+                deductionAmount = medicalExpenses + Math.min(stateTaxes, 10000) + mortgageInterest + charitable;
+            }
+            
+            const childrenCount = parseInt(document.getElementById('child-tax-credit').value) || 0;
+            const otherCredits = parseFloat(document.getElementById('other-credits').value) || 0;
+            
+            // Calculate total income
+            const totalIncome = wages + interest + dividends + capitalGains;
+            
+            // Calculate taxable income
+            const taxableIncome = Math.max(0, totalIncome - deductionAmount);
+            
+            // Calculate tax based on brackets
+            const brackets = taxBrackets[filingStatus];
+            let tax = 0;
+            let bracketTaxes = [];
+            
+            for (let i = 0; i < brackets.length; i++) {
+                const bracket = brackets[i];
+                let incomeInBracket = 0;
+                
+                if (taxableIncome > bracket.min) {
+                    incomeInBracket = Math.min(taxableIncome, bracket.max) - bracket.min;
+                    const taxInBracket = incomeInBracket * bracket.rate;
+                    tax += taxInBracket;
+                    
+                    bracketTaxes.push({
+                        rate: bracket.rate,
+                        min: bracket.min,
+                        max: bracket.max,
+                        incomeInBracket: incomeInBracket,
+                        taxInBracket: taxInBracket
+                    });
+                }
+            }
+            
+            // Apply tax credits
+            const totalCredits = (childrenCount * childTaxCredit) + otherCredits;
+            const finalTax = Math.max(0, tax - totalCredits);
+            
+            // Calculate effective tax rate
+            const effectiveRate = totalIncome > 0 ? (finalTax / totalIncome) * 100 : 0;
+            
+            // Update results page
+            updateResults({
+                filingStatus: filingStatus,
+                totalIncome: totalIncome,
+                deductions: deductionAmount,
+                taxableIncome: taxableIncome,
+                credits: totalCredits,
+                taxOwed: finalTax,
+                effectiveRate: effectiveRate,
+                bracketTaxes: bracketTaxes
+            });
+            
+            // Navigate to results page
+            navigateToPage('results');
+        }
+
+        // Update results page with calculated values
+        function updateResults(results) {
+            // Format filing status for display
+            let filingStatusText = '';
+            switch(results.filingStatus) {
+                case 'single':
+                    filingStatusText = 'Single';
+                    break;
+                case 'married_joint':
+                    filingStatusText = 'Married Filing Jointly';
+                    break;
+                case 'married_separate':
+                    filingStatusText = 'Married Filing Separately';
+                    break;
+                case 'head_household':
+                    filingStatusText = 'Head of Household';
+                    break;
+            }
+            
+            // Update summary fields
+            document.getElementById('summary-filing-status').textContent = filingStatusText;
+            document.getElementById('summary-total-income').textContent = `$${results.totalIncome.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('summary-deductions').textContent = `$${results.deductions.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('summary-taxable-income').textContent = `$${results.taxableIncome.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('summary-credits').textContent = `$${results.credits.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('summary-tax-owed').textContent = `$${results.taxOwed.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('summary-effective-rate').textContent = `${results.effectiveRate.toFixed(1)}%`;
+            
+            // Update tax bracket table
+            const taxBracketBody = document.getElementById('tax-bracket-body');
+            taxBracketBody.innerHTML = '';
+            
+            results.bracketTaxes.forEach(bracket => {
+                if (bracket.incomeInBracket > 0) {
+                    const row = document.createElement('tr');
+                    
+                    const bracketCell = document.createElement('td');
+                    bracketCell.className = 'px-3 py-2 text-sm text-gray-900 dark:text-white';
+                    bracketCell.textContent = `$${bracket.min.toLocaleString()} - $${bracket.max === Infinity ? '∞' : bracket.max.toLocaleString()}`;
+                    
+                    const rateCell = document.createElement('td');
+                    rateCell.className = 'px-3 py-2 text-sm text-gray-900 dark:text-white';
+                    rateCell.textContent = `${(bracket.rate * 100).toFixed(0)}%`;
+                    
+                    const incomeCell = document.createElement('td');
+                    incomeCell.className = 'px-3 py-2 text-sm text-gray-900 dark:text-white';
+                    incomeCell.textContent = `$${bracket.incomeInBracket.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                    
+                    const taxCell = document.createElement('td');
+                    taxCell.className = 'px-3 py-2 text-sm text-gray-900 dark:text-white';
+                    taxCell.textContent = `$${bracket.taxInBracket.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                    
+                    row.appendChild(bracketCell);
+                    row.appendChild(rateCell);
+                    row.appendChild(incomeCell);
+                    row.appendChild(taxCell);
+                    
+                    taxBracketBody.appendChild(row);
+                }
+            });
+            
+            // Create tax breakdown chart
+            createTaxBreakdownChart(results);
+        }
+
+        // Create tax breakdown chart
+        function createTaxBreakdownChart(results) {
+            const ctx = document.getElementById('tax-breakdown-chart').getContext('2d');
+            
+            // Prepare data for chart
+            const labels = [];
+            const data = [];
+            const colors = [];
+            const colorPalette = document.documentElement.classList.contains('dark') 
+                ? ['#4A49B7', '#5D5CDE', '#7E7CE7', '#9E9DF1', '#C0C0FF']
+                : ['#4A49B7', '#5D5CDE', '#7E7CE7', '#9E9DF1', '#C0C0FF'];
+            
+            results.bracketTaxes.forEach((bracket, index) => {
+                if (bracket.incomeInBracket > 0) {
+                    labels.push(`${(bracket.rate * 100).toFixed(0)}% Bracket`);
+                    data.push(bracket.taxInBracket);
+                    colors.push(colorPalette[index % colorPalette.length]);
+                }
+            });
+            
+            // Destroy previous chart if it exists
+            if (taxBreakdownChart) {
+                taxBreakdownChart.destroy();
+            }
+            
+            // Create new chart
+            taxBreakdownChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        borderColor: document.documentElement.classList.contains('dark') ? '#1F2937' : '#FFFFFF',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: document.documentElement.classList.contains('dark') ? '#FFFFFF' : '#000000',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `$${value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update charts when dark mode changes
+        function updateCharts() {
+            if (taxBreakdownChart) {
+                taxBreakdownChart.options.plugins.legend.labels.color = document.documentElement.classList.contains('dark') ? '#FFFFFF' : '#000000';
+                taxBreakdownChart.data.datasets[0].borderColor = document.documentElement.classList.contains('dark') ? '#1F2937' : '#FFFFFF';
+                taxBreakdownChart.update();
+            }
+        }
+
+        // Setup modals
+        function setupModals() {
+            // Privacy Modal
+            privacyToggle.addEventListener('click', () => {
+                privacyModal.classList.remove('hidden');
+            });
+            
+            privacyClose.addEventListener('click', () => {
+                privacyModal.classList.add('hidden');
+            });
+            
+            // Terms Modal
+            termsToggle.addEventListener('click', () => {
+                termsModal.classList.remove('hidden');
+            });
+            
+            termsClose.addEventListener('click', () => {
+                termsModal.classList.add('hidden');
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === privacyModal) {
+                    privacyModal.classList.add('hidden');
+                }
+                if (e.target === termsModal) {
+                    termsModal.classList.add('hidden');
+                }
+            });
+        }
+
+        // Setup FAQ accordion
+        function setupFAQ() {
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const expanded = question.getAttribute('aria-expanded') === 'true';
+                    const content = document.getElementById(question.getAttribute('aria-controls'));
+                    const icon = question.querySelector('i');
+                    
+                    if (expanded) {
+                        question.setAttribute('aria-expanded', 'false');
+                        content.classList.add('hidden');
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        question.setAttribute('aria-expanded', 'true');
+                        content.classList.remove('hidden');
+                        icon.classList.add('rotate-180');
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
